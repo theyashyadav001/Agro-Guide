@@ -31,7 +31,7 @@ jobs:
 
       - name: Install Node dependencies
         working-directory: agroguide-app
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       - name: Sync Capacitor (copy frontend web assets into Android)
         working-directory: agroguide-app
