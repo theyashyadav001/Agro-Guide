@@ -1,6 +1,15 @@
 node_modules/
-android/
-ios/
 dist/
 .env
 *.local
+
+# Android — keep project, exclude build outputs
+android/.gradle/
+android/build/
+android/app/build/
+android/.idea/
+android/local.properties
+
+# iOS — keep project, exclude pods
+ios/App/Pods/
+ios/.idea/

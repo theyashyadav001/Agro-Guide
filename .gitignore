@@ -6,8 +6,21 @@ __pycache__/
 *.db
 .venv/
 venv/
+
+# Node
 node_modules/
-agroguide-app/android/
-agroguide-app/ios/
 agroguide-app/node_modules/
+
+# Android build outputs only (keep the project, exclude compiled files)
+agroguide-app/android/.gradle/
+agroguide-app/android/build/
+agroguide-app/android/app/build/
+agroguide-app/android/.idea/
+agroguide-app/android/local.properties
+
+# iOS build outputs only
+agroguide-app/ios/App/Pods/
+agroguide-app/ios/.idea/
+
+# Data
 data/
