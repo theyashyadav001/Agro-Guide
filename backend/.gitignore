@@ -1,0 +1,9 @@
+# AgroGuide Backend — .gitignore
+__pycache__/
+*.pyc
+*.pyo
+.env
+crop_advisor.db
+*.db
+.venv/
+venv/

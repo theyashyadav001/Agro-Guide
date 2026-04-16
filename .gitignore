@@ -1,0 +1,13 @@
+# AgroGuide — Root .gitignore
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.db
+.venv/
+venv/
+node_modules/
+agroguide-app/android/
+agroguide-app/ios/
+agroguide-app/node_modules/
+data/

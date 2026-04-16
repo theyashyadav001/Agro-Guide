@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="AgroGuide — AI-powered crop recommendation system for Indian farmers. Smart Advice. Better Harvest.">
+    <meta name="theme-color" content="#1a7a3c">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AgroGuide">
+    <link rel="manifest" href="manifest.json">
+    <title>🌱 AgroGuide — Smart Advice. Better Harvest.</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ── Background Effects ── -->
+<div class="bg-pattern"></div>
+<div class="floating-particles">
+    <div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     NAVBAR
+     ══════════════════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+    <div class="nav-content">
+        <a href="index.html" class="nav-logo">
+            <img src="img/logo.png" alt="AgroGuide Logo" style="height:36px;width:36px;object-fit:contain;border-radius:8px;">
+            <span class="nav-logo-text">AgroGuide</span>
+        </a>
+        <div class="nav-actions">
+            <div class="lang-toggle" id="langToggle">
+                <button class="lang-btn active" data-lang="en" id="langEn">EN</button>
+                <button class="lang-btn" data-lang="hi" id="langHi">हिंदी</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+     HERO SECTION
+     ══════════════════════════════════════════════════════ -->
+<section class="hero" id="heroSection">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <span>🤖</span>
+            <span data-en="AI-Powered Recommendations" data-hi="AI आधारित सिफारिशें">AI-Powered Recommendations</span>
+        </div>
+        <h1>
+            <span data-en="Grow Smarter with" data-hi="स्मार्ट खेती करें">Grow Smarter with</span><br>
+            <span class="gradient-text" data-en="AgroGuide AI" data-hi="AgroGuide AI">AgroGuide AI</span>
+        </h1>
+        <p class="hero-subtitle" data-en="Get personalized crop recommendations based on your soil, weather, and farm conditions. Maximize profit, minimize risk." data-hi="अपनी मिट्टी, मौसम और खेत की स्थिति के आधार पर व्यक्तिगत फसल सिफारिशें प्राप्त करें।">
+            Get personalized crop recommendations based on your soil, weather, and farm conditions. Maximize profit, minimize risk.
+        </p>
+        <div class="hero-cta">
+            <button class="btn btn-primary btn-lg" id="startBtn" onclick="showForm()">
+                <span class="btn-icon">🚀</span>
+                <span data-en="Start Analysis" data-hi="विश्लेषण शुरू करें">Start Analysis</span>
+            </button>
+            <button class="btn btn-secondary btn-lg" onclick="showForm()">
+                <span class="btn-icon">📊</span>
+                <span data-en="Quick Predict" data-hi="तुरंत भविष्यवाणी">Quick Predict</span>
+            </button>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <div class="stat-value">22+</div>
+                <div class="stat-label" data-en="Crops" data-hi="फसलें">Crops</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">99%</div>
+                <div class="stat-label" data-en="Accuracy" data-hi="सटीकता">Accuracy</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">₹0</div>
+                <div class="stat-label" data-en="Free to Use" data-hi="निःशुल्क">Free to Use</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     MULTI-STEP FORM
+     ══════════════════════════════════════════════════════ -->
+<section class="form-section" id="formSection">
+    <div class="form-wrapper">
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-line" id="progressLine"></div>
+                <div class="progress-step active" data-step="1">
+                    <div class="step-circle">🧪</div>
+                    <span class="step-label" data-en="Soil Data" data-hi="मिट्टी डेटा">Soil Data</span>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-circle">🌾</div>
+                    <span class="step-label" data-en="Farm Details" data-hi="खेत विवरण">Farm Details</span>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-circle">📍</div>
+                    <span class="step-label" data-en="Location" data-hi="स्थान">Location</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+
+            <!-- ── STEP 1: Soil Data ── -->
+            <div class="form-step active" id="step1">
+                <div class="form-card-header">
+                    <h2 data-en="🧪 Soil Information" data-hi="🧪 मिट्टी की जानकारी">🧪 Soil Information</h2>
+                    <p data-en="Enter your soil nutrient levels and pH" data-hi="अपनी मिट्टी के पोषक तत्व और pH दर्ज करें">Enter your soil nutrient levels and pH</p>
+                </div>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label class="input-label">
+                            <span class="icon">🟢</span>
+                            <span data-en="Nitrogen (N)" data-hi="नाइट्रोजन (N)">Nitrogen (N)</span>
+                        </label>
+                        <input type="number" class="input-field" id="inputN" placeholder="e.g. 90" min="0" max="200" step="1" required>
+                        <span class="input-hint">kg/ha (0–200)</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">
+                            <span class="icon">🔵</span>
+                            <span data-en="Phosphorus (P)" data-hi="फास्फोरस (P)">Phosphorus (P)</span>
+                        </label>
+                        <input type="number" class="input-field" id="inputP" placeholder="e.g. 42" min="0" max="200" step="1" required>
+                        <span class="input-hint">kg/ha (0–200)</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">
+                            <span class="icon">🟡</span>
+                            <span data-en="Potassium (K)" data-hi="पोटैशियम (K)">Potassium (K)</span>
+                        </label>
+                        <input type="number" class="input-field" id="inputK" placeholder="e.g. 43" min="0" max="300" step="1" required>
+                        <span class="input-hint">kg/ha (0–300)</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">
+                            <span class="icon">⚗️</span>
+                            <span data-en="Soil pH" data-hi="मिट्टी pH">Soil pH</span>
+                        </label>
+                        <input type="number" class="input-field" id="inputPH" placeholder="e.g. 6.5" min="0" max="14" step="0.1" required>
+                        <span class="input-hint">Range: 0–14</span>
+                    </div>
+                </div>
+                <div class="form-nav">
+                    <button class="btn btn-secondary" onclick="showHero()">
+                        <span data-en="← Back" data-hi="← वापस">← Back</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep(2)">
+                        <span data-en="Next →" data-hi="अगला →">Next →</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── STEP 2: Farm Details ── -->
+            <div class="form-step" id="step2">
+                <div class="form-card-header">
+                    <h2 data-en="🌾 Farm Details" data-hi="🌾 खेत विवरण">🌾 Farm Details</h2>
+                    <p data-en="Tell us about your farm" data-hi="अपने खेत के बारे में बताएं">Tell us about your farm</p>
+                </div>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label class="input-label">
+                            <span class="icon">📐</span>
+                            <span data-en="Land Size (acres)" data-hi="भूमि का आकार (एकड़)">Land Size (acres)</span>
+                        </label>
+                        <input type="number" class="input-field" id="inputLand" placeholder="e.g. 2" min="0.1" max="1000" step="0.1" value="2">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">
+                            <span class="icon">💰</span>
+                            <span data-en="Budget (₹)" data-hi="बजट (₹)">Budget (₹)</span>
+                        </label>
+                        <input type="number" class="input-field" id="inputBudget" placeholder="e.g. 50000" min="1000" step="1000" value="50000">
+                    </div>
+                    <div class="input-group full-width">
+                        <label class="input-label">
+                            <span class="icon">💧</span>
+                            <span data-en="Water Availability" data-hi="पानी की उपलब्धता">Water Availability</span>
+                        </label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" name="water" id="waterLow" value="low">
+                                <label for="waterLow" class="radio-label">
+                                    <span class="icon">🏜️</span>
+                                    <span class="label-text" data-en="Low" data-hi="कम">Low</span>
+                                </label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="water" id="waterMedium" value="medium" checked>
+                                <label for="waterMedium" class="radio-label">
+                                    <span class="icon">💧</span>
+                                    <span class="label-text" data-en="Medium" data-hi="मध्यम">Medium</span>
+                                </label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="water" id="waterHigh" value="high">
+                                <label for="waterHigh" class="radio-label">
+                                    <span class="icon">🌊</span>
+                                    <span class="label-text" data-en="High" data-hi="अधिक">High</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-nav">
+                    <button class="btn btn-secondary" onclick="nextStep(1)">
+                        <span data-en="← Back" data-hi="← वापस">← Back</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep(3)">
+                        <span data-en="Next →" data-hi="अगला →">Next →</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── STEP 3: Location & Weather ── -->
+            <div class="form-step" id="step3">
+                <div class="form-card-header">
+                    <h2 data-en="📍 Location & Weather" data-hi="📍 स्थान और मौसम">📍 Location & Weather</h2>
+                    <p data-en="Enter your city or auto-detect location" data-hi="अपना शहर दर्ज करें या स्थान स्वतः पहचानें">Enter your city or auto-detect location</p>
+                </div>
+
+                <button class="location-detect-btn" id="detectLocationBtn" onclick="detectLocation()">
+                    <span>📍</span>
+                    <span data-en="Auto-Detect My Location" data-hi="मेरा स्थान स्वतः पहचानें">Auto-Detect My Location</span>
+                </button>
+
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label class="input-label">
+                            <span class="icon">🏙️</span>
+                            <span data-en="City" data-hi="शहर">City</span>
+                        </label>
+                        <input type="text" class="input-field" id="inputCity" placeholder="e.g. Pune, Mumbai, Delhi" value="">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">
+                            <span class="icon">🌡️</span>
+                            <span data-en="Temperature (°C)" data-hi="तापमान (°C)">Temperature (°C)</span>
+                        </label>
+                        <input type="number" class="input-field" id="inputTemp" placeholder="e.g. 25" min="-10" max="55" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">
+                            <span class="icon">💨</span>
+                            <span data-en="Humidity (%)" data-hi="आर्द्रता (%)">Humidity (%)</span>
+                        </label>
+                        <input type="number" class="input-field" id="inputHumidity" placeholder="e.g. 80" min="0" max="100" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">
+                            <span class="icon">🌧️</span>
+                            <span data-en="Rainfall (mm)" data-hi="वर्षा (mm)">Rainfall (mm)</span>
+                        </label>
+                        <input type="number" class="input-field" id="inputRainfall" placeholder="e.g. 200" min="0" max="500" step="0.1">
+                    </div>
+                </div>
+
+                <!-- Weather preview after API fetch -->
+                <div class="weather-preview" id="weatherPreview">
+                    <strong style="color: var(--primary-light);">🌤️ <span data-en="Weather Data Loaded" data-hi="मौसम डेटा लोड">Weather Data Loaded</span></strong>
+                    <div class="weather-grid">
+                        <div class="weather-item">
+                            <div class="value" id="wpTemp">--</div>
+                            <div class="wlabel" data-en="Temperature" data-hi="तापमान">Temperature</div>
+                        </div>
+                        <div class="weather-item">
+                            <div class="value" id="wpHumidity">--</div>
+                            <div class="wlabel" data-en="Humidity" data-hi="आर्द्रता">Humidity</div>
+                        </div>
+                        <div class="weather-item">
+                            <div class="value" id="wpRainfall">--</div>
+                            <div class="wlabel" data-en="Rainfall" data-hi="वर्षा">Rainfall</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-nav">
+                    <button class="btn btn-secondary" onclick="nextStep(2)">
+                        <span data-en="← Back" data-hi="← वापस">← Back</span>
+                    </button>
+                    <button class="btn btn-accent btn-lg" id="submitBtn" onclick="submitForm()">
+                        <span class="btn-icon">🔍</span>
+                        <span data-en="Get Recommendations" data-hi="सिफारिशें प्राप्त करें">Get Recommendations</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ── Loading Overlay ── -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text" data-en="Analyzing your farm data..." data-hi="आपके खेत के डेटा का विश्लेषण हो रहा है...">Analyzing your farm data...</div>
+</div>
+
+<!-- ── Toast ── -->
+<div class="toast" id="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

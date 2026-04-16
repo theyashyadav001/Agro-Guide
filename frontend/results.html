@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="AgroGuide — Crop recommendation results. Top 3 crop picks for your farm.">
+    <meta name="theme-color" content="#1a7a3c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>🌱 AgroGuide — Results</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="bg-pattern"></div>
+<div class="floating-particles">
+    <div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-content">
+        <a href="index.html" class="nav-logo">
+            <img src="img/logo.png" alt="AgroGuide Logo" style="height:36px;width:36px;object-fit:contain;border-radius:8px;">
+            <span class="nav-logo-text">AgroGuide</span>
+        </a>
+        <div class="nav-actions">
+            <a href="index.html" class="btn btn-sm btn-secondary">← New Analysis</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Results Section -->
+<section class="results-section" id="resultsSection">
+    <div class="container">
+        <div class="results-header">
+            <h1>🎯 Your Crop Recommendations</h1>
+            <p id="resultSubtitle">Based on your soil and farm analysis</p>
+        </div>
+
+        <!-- Input Summary Chips -->
+        <div class="input-summary" id="inputSummary"></div>
+
+        <!-- Crop Cards -->
+        <div class="crop-cards" id="cropCards">
+            <!-- Cards populated by JS -->
+        </div>
+
+        <!-- Action buttons -->
+        <div style="text-align: center; margin-top: 24px;">
+            <a href="index.html" class="btn btn-primary btn-lg">
+                <span class="btn-icon">🔄</span> Try Another Analysis
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Loading -->
+<div class="loading-overlay active" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading your recommendations...</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/results.js"></script>
+</body>
+</html>

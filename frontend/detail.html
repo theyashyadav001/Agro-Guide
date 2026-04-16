@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="AgroGuide — Detailed crop information including timeline, risk analysis, and profit projections.">
+    <meta name="theme-color" content="#1a7a3c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>🌱 AgroGuide — Crop Details</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="bg-pattern"></div>
+<div class="floating-particles">
+    <div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-content">
+        <a href="index.html" class="nav-logo">
+            <img src="img/logo.png" alt="AgroGuide Logo" style="height:36px;width:36px;object-fit:contain;border-radius:8px;">
+            <span class="nav-logo-text">AgroGuide</span>
+        </a>
+        <div class="nav-actions">
+            <button class="btn btn-sm btn-secondary" onclick="history.back()">← Back to Results</button>
+        </div>
+    </div>
+</nav>
+
+<!-- Detail Section -->
+<section class="detail-section" id="detailSection">
+    <div class="container">
+        <a href="#" class="detail-back" onclick="history.back(); return false;">← Back to recommendations</a>
+
+        <!-- Hero Card -->
+        <div class="detail-hero-card" id="detailHero">
+            <!-- Populated by JS -->
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline-section" id="timelineSection">
+            <h2 class="section-title">📅 Farming Timeline</h2>
+            <div class="timeline" id="timelineContent"></div>
+        </div>
+
+        <!-- Risk Analysis -->
+        <div class="risk-section" id="riskSection">
+            <h2 class="section-title">⚠️ Risk Analysis</h2>
+            <div id="riskContent"></div>
+        </div>
+
+        <!-- Profit Projection -->
+        <div class="profit-section" id="profitSection">
+            <h2 class="section-title">💰 Profit Projection</h2>
+            <div id="profitContent"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 32px;">
+            <a href="index.html" class="btn btn-primary btn-lg">
+                <span class="btn-icon">🔄</span> New Analysis
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Loading -->
+<div class="loading-overlay active" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading crop details...</div>
+</div>
+
+<script src="js/detail.js"></script>
+</body>
+</html>
