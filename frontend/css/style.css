@@ -1374,3 +1374,54 @@ select.input-field {
 
 /* Bottom bar spacing so content isn't hidden under the bar */
 body { padding-bottom: 64px; }
+
+/* ── Share Progress Steps ── */
+.sd-progress-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.sd-step-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    border: 1px solid var(--card-border, #334155);
+    transition: background 0.3s, border-color 0.3s;
+}
+
+.sd-step-done   { border-color: #16a34a; background: rgba(22,163,74,0.08); }
+.sd-step-fail   { border-color: #dc2626; background: rgba(220,38,38,0.08); }
+.sd-step-skip   { border-color: #ca8a04; background: rgba(202,138,4,0.08); }
+.sd-step-loading { border-color: var(--primary, #10b981); }
+
+.sd-step-icon  { font-size: 1.2rem; flex-shrink: 0; }
+.sd-step-label { font-size: 0.88rem; color: var(--text-secondary, #cbd5e1); }
+
+/* ── Location button spinner ── */
+.loc-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.location-detect-btn.loading {
+    opacity: 0.8;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

