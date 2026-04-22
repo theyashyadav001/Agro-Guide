@@ -2,8 +2,6 @@
  * AgroGuide — Main Application JavaScript
  */
 
-const API_BASE = window.AGROGUIDE_API_URL || "https://agroguide-api.up.railway.app";
-
 let currentStep = 1;
 let currentLang = "en";
 
@@ -226,15 +224,7 @@ async function submitForm() {
     };
 
     try {
-        const res = await fetch(`${API_BASE}/predict`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-        });
-
-        if (!res.ok) { const err = await res.json(); throw new Error(err.detail || "Prediction failed"); }
-
-        const data = await res.json();
+        const data = predictCrops(payload);
 
         if (data.success && data.recommendations.length > 0) {
             sessionStorage.setItem("cropResults", JSON.stringify(data));
