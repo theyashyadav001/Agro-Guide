@@ -56,3 +56,15 @@ jobs:
         run: |
           echo "✅ APK built successfully!"
           ls -lh agroguide-app/android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Create GitHub Release with APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: "AgroGuide Build #${{ github.run_number }}"
+          body: "✅ Debug APK — auto-built from latest commit.\n\nDownload **app-debug.apk** below and install on your Android device."
+          files: agroguide-app/android/app/build/outputs/apk/debug/app-debug.apk
+          draft: false
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
